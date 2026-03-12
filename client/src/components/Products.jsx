@@ -52,22 +52,21 @@ const Products = ({ products, loading, error }) => {
         />
       </div>
 
-      <div
-        className="grid grid-rows-fr xs:grid-cols-2 sm:grid-cols-3 xs:gap-2 sm:gap-4
-                 lg:grid-cols-4 md:mx-4 justify-items-center items-center my-4"
-      >
+      <div className="grid grid-rows-fr xs:grid-cols-2 sm:grid-cols-3 xs:gap-2 sm:gap-4 lg:grid-cols-4 md:mx-4 justify-items-center items-center my-4">
         {loading ? (
           <Loading />
         ) : error ? (
           <Error error={error} />
-        ) : Array.isArray(data) && data.length > 0 ? (
-          data
+        ) : Array.isArray(products) && products.length > 0 ? ( // Changed 'data' to 'products'
+          products
             .slice(0, 30)
             .map((elem) => (
               <ProductCard product={elem} key={elem._id || elem.id} />
             ))
         ) : (
-          <p>No products Available</p>
+          <p className="col-span-full text-center py-10">
+            No products Available
+          </p>
         )}
       </div>
     </div>

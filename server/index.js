@@ -2,18 +2,38 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import router from "./routes/productRoutes.js";
+import productRoutes from './routes/productRoutes.js';
 
 dotenv.config();
 
 const app = express();
 
-app.use(cors());
+// 1. CORS Configuration
+app.use(cors({
+  origin: "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 
 app.use(express.json());
+app.use((req, res, next) => {
+  console.log(`Incoming Request: ${req.method} ${req.url}`);
+  next();
+});
+app.use((req, res, next) => {
+  console.log("--- New Request ---");
+  console.log("Method:", req.method);
+  console.log("Path:", req.path);
+  next();
+});
+// 2. ROUTES 
+// Use the name you imported: 'productRoutes'
+// This makes every route in productRoutes start with /api
+app.use("/api", productRoutes);
 
 const PORT = process.env.PORT || 5000;
 
+// 3. DATABASE CONNECTION
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
@@ -24,6 +44,7 @@ const connectDB = async () => {
   }
 };
 
+// 4. SERVER START
 const startServer = async () => {
   try {
     await connectDB();
@@ -35,4 +56,5 @@ const startServer = async () => {
     process.exit(1);
   }
 };
+
 startServer();

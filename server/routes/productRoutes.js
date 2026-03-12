@@ -14,6 +14,12 @@ import {
 
 const router = express.Router();
 
+// Remove the extra '/shoes/' prefix if your frontend isn't using it
+// This makes the URL: http://localhost:5000/api/men
+// This makes the final URL: /api/shoes/:category
+// Remove any extra slashes or 'api' words here
+
+router.get('/shoes/:category', getByCategory);
 //Route to get all products
 router.get('/', getProducts);
 
@@ -23,8 +29,6 @@ router.get('/product/:id', getProduct);
 //Route to add a product
 router.post("/product", addProduct);
 
-//Route to send products based on men,women and kid
-router.get('/category/:category', getByCategory);
 
 //Route to get top rated products
 router.get('/filter/topRated', getTopRated);
@@ -36,7 +40,7 @@ router.get('/filter/bestSellers', getBestSellers)
 router.get('/products/search', searchProducts)
 
 //Route to sort products
-// router.get('/products/:category/sortby/:criteria/:order', sortProducts)
+ //router.get('/products/:category/sortby/:criteria/:order', sortProducts)
 
 //Route to filter products
 router.get('/products/filterBy', filterProducts)

@@ -1,41 +1,46 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import Products from '../components/Products';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Products from "../components/Products";
 
 const Men = () => {
-    const [products, setProducts] = useState([]);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        let isMounted = true;
-        const fetchData = async () => {
-            try {
-                const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/category/men`);
-                if (isMounted) {
-                    const sorted = res.data.sort((a, b) => parseInt(b.reviews) - parseInt(a.reviews))
-                    setProducts(sorted);
-                    setLoading(false);
-                }
-            } catch (err) {
-                if (isMounted) {
-                    console.error(`Error while fetching products: ${err.message}`);
-                    setError(err);
-                    setLoading(false);
-                }
+  useEffect(() => {
+    console.log(
+      "Men Component Mounted - VITE_BASE_URL is:",
+      import.meta.env.VITE_BASE_URL,
+    );
 
-            }
+    const fetchData = async () => {
+      try {
+        // Replace the template literal with the direct address
+        const targetUrl = "http://localhost:5000/api/shoes/men";
+        console.log("Attempting fetch to:", targetUrl);
+
+        const response = await axios.get(targetUrl);
+        console.log("Data received from server:", response.data);
+
+        if (Array.isArray(response.data)) {
+          setProducts(response.data);
         }
-        fetchData();
-        return () => {
-            isMounted = false;
-        }
-    }, [])
-    return (
-        <>
-            <Products loading={loading} error={error} products={products} />
-        </>
-    )
-}
+      } catch (err) {
+        console.error("AXIOS ERROR:", err.message);
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-export default Men
+    fetchData();
+  }, []); // Empty dependency array ensures it runs once on load
+
+  return (
+    <>
+      <Products loading={loading} error={error} products={products} />
+    </>
+  );
+};
+
+export default Men;
